@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/local_database/database_tables_controller/calander/calander_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application/edependencies.dart' as dep;
-import 'package:get/get_connect/http/src/utils/utils.dart';
-
 import 'local_database/database_models/calander_model/calander_model.dart';
 
 Future<void> main() async {
@@ -24,13 +22,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: NotesPage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
+class NotesPage extends StatelessWidget {
+  NotesPage({super.key});
 
   var notesController = TextEditingController();
   int currentIndex = 0;
@@ -62,16 +60,18 @@ class MyHomePage extends StatelessWidget {
             ),
             OutlinedButton(
                 onPressed: () {
-                  var allnotes = NotessModelDatabase(
-                      value: currentIndex, notes: notesController.text);
-                  notes.create(allnotes, currentIndex).then((value) {
-                    Get.find<NotesTableController>().getNotes();
-                  });
+                  if (notesController.text.isNotEmpty) {
+                    var allnotes = NotessModelDatabase(
+                        value: currentIndex, notes: notesController.text);
+                    notes.create(allnotes, currentIndex).then((value) {
+                      Get.find<NotesTableController>().getNotes();
+                    });
+                  }
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.blue),
                 ),
-                child: Text(
+                child: const Text(
                   'Save',
                   style: TextStyle(color: Colors.white),
                 )),
@@ -79,7 +79,7 @@ class MyHomePage extends StatelessWidget {
               height: 16,
             ),
             allnotes.isEmpty
-                ? Center(child: Text("Start Writing your notes"))
+                ? const Center(child: Text("Start Writing your notes"))
                 : ListView.builder(
                     itemCount: allnotes.length,
                     shrinkWrap: true,
@@ -95,7 +95,7 @@ class MyHomePage extends StatelessWidget {
                                 } else {}
                               });
                             },
-                            child: Icon(Icons.delete)),
+                            child: const Icon(Icons.delete)),
                       );
                     },
                   ),
